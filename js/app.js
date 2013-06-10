@@ -42,7 +42,7 @@ $.widget('pagechangedemo.linkTable', {
 		$.getJSON("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22"+
 			encodeURIComponent(rowUrl)+"%22&format=json'&callback=?", function(data) {
 				if(data.results[0]) {
-					// Page data successfully retrieved
+					// PAGE EXISTS
 					
 					// Render the checkbox to show it exists
 					state.renderUrlExists(row, true);
@@ -64,17 +64,25 @@ $.widget('pagechangedemo.linkTable', {
 
 					// Compare the MD5s
 					if(oldMD5 == currentMD5) {
+						// PAGE EXISTS AND STAYED THE SAME
+
 						// Render the checkbox to show MD5 is the same
-						state.renderMD5Comparison(row, true);
+						state.renderMD5Comparison(row, "same");
+
+						// Collapse - we don't care about unchanged pages
+						$(row).hide('slow');
 					} else {
+						// PAGE EXISTS BUT DID NOT STAY THE SAME
+
 						// Render the checkbox to show MD5 is not the same
-						state.renderMD5Comparison(row, false);
+						state.renderMD5Comparison(row, "not same");
 					}
 				} else {
-					// Page data NOT successfully retrieved
+					// PAGE DOES NOT EXIST
 
 					// Render the checkbox to show it doesn't exist
 					state.renderUrlExists(row, false);
+					state.renderMD5Comparison(row, "unknown");
 				}
 
 				state.options.completedComparisons++;
@@ -111,16 +119,23 @@ $.widget('pagechangedemo.linkTable', {
 	/**
 	 * This function renders the Changed? badges to show whether a page has been changed or not
 	 * @param  {DOM Element}  row
-	 * @param  {Boolean} 	  isSame
+	 * @param  {string} 	  isSame
 	 * @return {void}
 	 */
 	renderMD5Comparison: function(row, isSame) {
-		if(isSame) {
-			$(row).children("td.url-md5compare").children('span')
-			.children('i').attr('class', 'icon-ok');
-		} else {
-			$(row).children("td.url-md5compare").children('span').attr('class', 'badge badge-warning')
-			.children('i').attr('class', 'icon-pencil');
+		switch(isSame) {
+			case "same":
+				$(row).children("td.url-md5compare").children('span')
+				.children('i').attr('class', 'icon-ok');
+				break;
+			case "not same":
+				$(row).children("td.url-md5compare").children('span').attr('class', 'badge badge-warning')
+				.children('i').attr('class', 'icon-pencil');
+				break;
+			case "unknown":
+				$(row).children("td.url-md5compare").children('span')
+				.children('i').attr('class', 'icon-question');
+				break;
 		}
 	}
 });

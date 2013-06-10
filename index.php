@@ -20,7 +20,10 @@ include "lib/sql.php";
 		<div class="row-fluid">
 			<h1>This is a demo <small>showcasing a method of checking web pages for changes over time</small></h1>
 			<span>
-				Explanation
+				This demo showcases a method to check if pages are available, and have changed since last check. It 
+				uses AJAX and Yahoo's query api to query a page for its source content, which it then MD5 hashes
+				and compares to the last MD5 hash. Hashes can be saved by clicking on the yellow 'Pencil' icon
+				to the right.
 			</span>
 		</div>
 		<div class="row-fluid">
