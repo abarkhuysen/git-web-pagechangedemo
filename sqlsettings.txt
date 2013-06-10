@@ -1,0 +1,5 @@
+SQL server settings
+Host: 192.168.1.121
+User: root
+Password: 92e32c
+
