@@ -25,6 +25,13 @@ include "lib/sql.php";
 		</div>
 		<div class="row-fluid">
 			<div class="span12">
+				<div class="comparison-progress-bar-full progress progress-striped active">
+					<div class="comparison-progress-bar bar" style="width: 0%;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
 				<table class="table linkTable">
 					<thead>
 						<tr>

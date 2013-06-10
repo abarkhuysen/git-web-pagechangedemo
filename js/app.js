@@ -1,8 +1,11 @@
 // Our custom widget which handles the tooltips and data attributes
 $.widget('pagechangedemo.linkTable', {
-	identities: {
+	options: {
 		"thisTable": null,
-		"tableRows": null
+		"tableRows": null,
+		"progressBar": ".comparison-progress-bar",
+		"progressBarFull": ".comparison-progress-bar-full",
+		"completedComparisons": 0
 	},
 
 	/**
@@ -73,8 +76,20 @@ $.widget('pagechangedemo.linkTable', {
 					// Render the checkbox to show it doesn't exist
 					state.renderUrlExists(row, false);
 				}
+
+				state.options.completedComparisons++;
+				state.renderProgressBar(state);
 			}
 			);
+	},
+
+	renderProgressBar: function(state) {
+		var numRows = $(state.options.tableRows).length;
+		var currentPercent = state.options.completedComparisons / numRows * 100;
+		$(state.options.progressBar).css('width', currentPercent+"%");
+
+		if(numRows == state.options.completedComparisons)
+			$(state.options.progressBarFull).removeClass('progress-striped');
 	},
 
 	/**
