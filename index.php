@@ -16,8 +16,8 @@ include "lib/sql.php";
 	<link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
 <body>
-	<div class="container-fluid">
-		<div class="row-fluid">
+	<div class="container-fluid linkComparisonTool">
+		<div class="row-fluid explanation">
 			<h1>This is a demo <small>showcasing a method of checking web pages for changes over time</small></h1>
 			<span>
 				This demo showcases a method to check if pages are available, and have changed since last check. It 
@@ -34,8 +34,19 @@ include "lib/sql.php";
 			</div>
 		</div>
 		<div class="row-fluid">
+			<div class="span4">
+				<span class="fillin-amount-pages-compared">0</span> / <span class="fillin-total-pages-to-compare">0</span> pages compared.
+			</div>
+			<div class="span4">
+				<span class="fillin-amount-pages-dne">0</span> pages not found.
+			</div>
+			<div class="span4">
+				<span class="fillin-amount-pages-changed">0</span> pages changed.
+			</div>
+		</div>
+		<div class="row-fluid">
 			<div class="span12">
-				<table class="table linkTable">
+				<table class="table urlTable">
 					<thead>
 						<tr>
 							<td><h4>#</h4></td>
@@ -48,9 +59,9 @@ include "lib/sql.php";
 						<?php
 						// Decode the table data (returned in JSON) and output
 						$links = json_decode(getLinks("json", "return"));
-						foreach($links as $link) {
+						foreach($links as $index=>$link) {
 							echo "<tr data-id='".$link->id."' data-url='".$link->url."' data-md5hash='".$link->md5hash."'>";
-							echo "<td>".$link->id."</td>";
+							echo "<td>".($index+1)."</td>";
 							echo "<td><a href='".("http://".$link->url)."'>".$link->url."</a></td>";
 							echo "<td class='url-status'><span class='badge'><i class='icon-refresh'></i></span></td>";
 							echo "<td class='url-md5compare'><span class='badge'><i class='icon-refresh'></i></span></td>";
@@ -67,5 +78,5 @@ include "lib/sql.php";
 
 <script type="text/javascript">
 // Initialize the 'linkTable' widget onto the '.linkTable' table, triggering the beginning of data collection and comparison
-$(".linkTable").linkTable();
+$(".linkComparisonTool").linkComparisonTool();
 </script>

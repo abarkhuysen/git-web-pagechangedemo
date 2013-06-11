@@ -1,11 +1,17 @@
 // Our custom widget which handles the tooltips and data attributes
-$.widget('pagechangedemo.linkTable', {
+$.widget('pagechangedemo.linkComparisonTool', {
 	options: {
 		"thisTable": null,
 		"tableRows": null,
 		"progressBar": ".comparison-progress-bar",
 		"progressBarFull": ".comparison-progress-bar-full",
-		"completedComparisons": 0
+		"fillInPagesCompared": ".fillin-amount-pages-compared",
+		"fillInTotalPagesCompared": ".fillin-total-pages-to-compare",
+		"fillInPagesDNE": ".fillin-amount-pages-dne",
+		"fillInPagesChanged": ".fillin-amount-pages-changed",
+		"completedComparisons": 0,
+		"pagesDNE": 0,
+		"pagesChanged": 0
 	},
 
 	/**
@@ -14,10 +20,15 @@ $.widget('pagechangedemo.linkTable', {
 	 * @return {void}
 	 */
 	_init: function() {
+		// Basic init
 		var state = this;
-		state.options.thisTable = this.element[0];
+		state.options.thisTable = $(this.element[0]).find('.urlTable');
 		state.options.tableRows = $(state.options.thisTable).children('tbody').children();
+		var numRows = $(state.options.tableRows).length;
 
+		$(state.options.fillInTotalPagesCompared).text(numRows);
+
+		// Analyze pages
 		$(state.options.tableRows).each(function(index, row){
 			state.analyzePage(row);
 		});
@@ -74,11 +85,17 @@ $.widget('pagechangedemo.linkTable', {
 					} else {
 						// PAGE EXISTS BUT DID NOT STAY THE SAME
 
+						state.options.pagesChanged++;
+						$(state.options.fillInPagesChanged).text(state.options.pagesChanged);
+
 						// Render the checkbox to show MD5 is not the same
 						state.renderMD5Comparison(row, "not same");
 					}
 				} else {
 					// PAGE DOES NOT EXIST
+
+					state.options.pagesDNE++;
+					$(state.options.fillInPagesDNE).text(state.options.pagesDNE);
 
 					// Render the checkbox to show it doesn't exist
 					state.renderUrlExists(row, false);
@@ -86,6 +103,7 @@ $.widget('pagechangedemo.linkTable', {
 				}
 
 				state.options.completedComparisons++;
+				$(state.options.fillInPagesCompared).text(state.options.completedComparisons);
 				state.renderProgressBar(state);
 			}
 			);
